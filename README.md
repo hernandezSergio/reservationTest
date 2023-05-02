@@ -1,3 +1,3 @@
 # reservationTest
 
-Spring boot application, running in java 11
+Spring boot application, running in java 17
