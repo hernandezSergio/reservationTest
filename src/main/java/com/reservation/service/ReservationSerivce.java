@@ -84,21 +84,39 @@ public class ReservationSerivce {
 
 	private Reservation buildObject(Reservation reservation, String id) {
 		Reservation temp = list.get("Reservation " + id);
+		
+		boolean isUpdatable = true;
 
 		if (null != reservation.getRoomNumber()) {
-			if (isRoomTaken(reservation))
-				return null;
-			temp.setRoomNumber(reservation.getRoomNumber());
+
+			if (null == reservation.getReservations()) {
+
+				reservation.setReservations(temp.getReservations());
+
+				if (isRoomTaken(reservation)) {
+					isUpdatable = false;
+					return null;
+				}
+			}
+			
+
+		}
+		
+		for (Reservation item : list.values()) {
+			System.out.println("");
 		}
 
 		if (null != reservation.getReservations()) {
-			if (isRoomTakenPatch(reservation, temp))
+			if (isRoomTakenPatch(reservation))
 				return null;
+			temp.setRoomNumber(reservation.getRoomNumber());
 			temp.setReservations(reservation.getReservations());
+
 		}
 
-		if (null != reservation.getFullName()) {
+		if (null != reservation.getFullName() && isUpdatable) {
 			temp.setFullName(reservation.getFullName());
+
 		}
 
 		return temp;
@@ -120,8 +138,7 @@ public class ReservationSerivce {
 			if (reservation.getRoomNumber().equals(item.getRoomNumber())) {
 				for (int i = 0; i < item.getReservations().size(); i++) {
 					for (int j = 0; j < reservation.getReservations().size(); j++) {
-						if (item.getReservations().get(i).equals((reservation.getReservations().get(j)))) {
-
+						if (!item.getReservations().get(i).equals((reservation.getReservations().get(j)))) {
 							return true;
 						}
 
@@ -133,13 +150,13 @@ public class ReservationSerivce {
 		return false;
 	}
 
-	public boolean isRoomTakenPatch(Reservation reservation, Reservation temp) {
+	public boolean isRoomTakenPatch(Reservation reservation) {
 
 		for (Reservation item : list.values()) {
 			for (int i = 0; i < item.getReservations().size(); i++) {
 				for (int j = 0; j < reservation.getReservations().size(); j++) {
 					if (item.getReservations().get(i).equals((reservation.getReservations().get(j)))) {
-						if (!item.getRoomNumber().equals(reservation.getRoomNumber()))
+						if (reservation.getRoomNumber().equals(item.getRoomNumber()))
 							return true;
 					}
 
