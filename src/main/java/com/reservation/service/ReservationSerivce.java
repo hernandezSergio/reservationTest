@@ -101,10 +101,7 @@ public class ReservationSerivce {
 			
 
 		}
-		
-		for (Reservation item : list.values()) {
-			System.out.println("");
-		}
+
 
 		if (null != reservation.getReservations()) {
 			if (isRoomTakenPatch(reservation))
